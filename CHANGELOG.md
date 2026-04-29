@@ -59,5 +59,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   const (PascalCase), and instance (`_camelCase`) families. The previous
   single rule forced underscore prefixes onto static readonly fields,
   which fights idiomatic .NET style.
+- `Account` aggregate with the `open / freeze / unfreeze / close` event
+  family plus `credit / debit` movements. State is folded from a
+  sequence of `AccountEvent`s; commands raise events and update state
+  in lockstep. Invariants enforced and tested: balance never goes
+  negative (no overdraft policy yet), frozen accounts reject debits and
+  credits, closed accounts are terminal, currency mismatches throw,
+  non-positive credits/debits throw, close-with-non-zero-balance throws.
+- `AccountId` strongly-typed identifier, `AccountStatus` enum,
+  `DomainException` base with a stable `Code` for the future
+  problem-details mapping (PR #17), and the `AccountException` family
+  (already-open, not-open, frozen, not-frozen, closed,
+  insufficient-funds).
 
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
