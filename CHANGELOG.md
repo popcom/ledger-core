@@ -72,4 +72,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (already-open, not-open, frozen, not-frozen, closed,
   insufficient-funds).
 
+### Tests
+
+- FsCheck property-based invariants on the `Account` aggregate over
+  random sequences of valid commands: replay equivalence (folding the
+  pending events into a fresh aggregate reproduces the same state),
+  conservation (balance equals credits minus debits), non-negative
+  balance under any valid history, frozen-rejects-writes for arbitrary
+  amounts, and closed-account-is-sealed against every state-changing
+  command. 200 cases per property where the input space is wide,
+  50 where it is narrow.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
