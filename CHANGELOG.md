@@ -38,4 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   namespace inside `Program.cs` conflicted with the file-scoped namespace
   rule that `dotnet format --verify-no-changes` now enforces.
 
+### Documentation
+
+- ADR-0001: modular monolith over microservices.
+- ADR-0002: event sourcing for the Ledger write side.
+- ADR-0003: Marten over EventStoreDB as the event store.
+- `docs/adr/README.md`: index of accepted ADRs and the queue of ADRs
+  scheduled to land alongside the code they document.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
