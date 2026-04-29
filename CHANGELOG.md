@@ -46,4 +46,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/adr/README.md`: index of accepted ADRs and the queue of ADRs
   scheduled to land alongside the code they document.
 
+### Domain
+
+- `Money` value object with currency-safe arithmetic. Backed by `decimal`
+  (never `float`/`double`); operators throw `CurrencyMismatchException`
+  rather than silently converting; equality, comparison, negation, and
+  scalar multiply/divide are first-class.
+- `Currency` value object: ISO 4217 alphabetic-code parser, canonicalised
+  to upper case, with `Eur`/`Gbp`/`Usd`/`Chf` constants for tests and
+  samples.
+- `.editorconfig` naming rules split into static-readonly (PascalCase),
+  const (PascalCase), and instance (`_camelCase`) families. The previous
+  single rule forced underscore prefixes onto static readonly fields,
+  which fights idiomatic .NET style.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
