@@ -1,0 +1,73 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+publish/
+TestResults/
+*.binlog
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.swp
+*.swo
+*~
+.DS_Store
+
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+.nuget/
+packages/
+!packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Test / coverage
+coverage/
+*.coverage
+*.coveragexml
+*.opencover.xml
+*.lcov
+TestResult.xml
+StrykerOutput/
+.mutationtest/
+
+# Rider
+*.DotSettings.user
+
+# JetBrains ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Tooling caches
+.tool-versions
+
+# Local environment
+.env
+.env.local
+*.local.json
+appsettings.Development.json
+secrets/
+
+# Docker
+docker-compose.override.yml
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Verify snapshot diffs
+*.received.*
+*.received/
