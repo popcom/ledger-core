@@ -51,10 +51,14 @@ jobs:
         run: dotnet build Ledger.sln --configuration Release --no-restore
 
       - name: Test with coverage
+        # Integration tests (Category=Integration) need Docker. They run
+        # in their own job once that wiring lands; the default CI lane
+        # is unit + property + architecture only.
         run: |
           dotnet test Ledger.sln \
             --configuration Release \
             --no-build \
+            --filter "Category!=Integration" \
             --logger "trx;LogFileName=test-results.trx" \
             --logger "console;verbosity=normal" \
             --results-directory ./TestResults \

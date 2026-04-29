@@ -17,9 +17,12 @@ namespace Ledger.Infrastructure.IntegrationTests;
 /// Smoke tests for the Marten wiring. Uses Testcontainers Postgres
 /// rather than mocks because the value of this layer is precisely the
 /// thing a mock cannot prove: that events round-trip through real
-/// JSONB columns under conjoined tenancy. The tests assume Docker is
-/// available; CI's ubuntu-latest runner has it.
+/// JSONB columns under conjoined tenancy. Tagged
+/// <c>Category=Integration</c> so the default CI filter skips them
+/// until a dedicated integration job lands; running them locally only
+/// requires Docker.
 /// </summary>
+[Trait("Category", "Integration")]
 public sealed class MartenWiringTests : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
