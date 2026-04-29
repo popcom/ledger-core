@@ -97,4 +97,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hold events (`HoldPlaced`, `HoldCaptured`, `HoldReleased`,
   `HoldExpired`), and the `HoldException` family.
 
+### Infrastructure
+
+- Marten 8.34 wired as the event store. Single composition root
+  (`AddLedgerInfrastructure`) configures the document store with
+  conjoined tenancy and registers every domain event type so streams
+  deserialise without runtime reflection on every load.
+- `IAggregateRepository` Application port + `MartenAggregateRepository`
+  implementation. Sessions are opened tenant-scoped via
+  `IDocumentStore.LightweightSession(tenantId, IsolationLevel)`; loads
+  go through `Events.FetchStreamAsync` and fold via the aggregate's
+  own `Rehydrate`; saves use `StartStream<TAggregate>` for new streams
+  and `AppendOptimistic` for existing ones, with version checks.
+- `TenantId` value object (alphanumeric + `-`/`_`, 64-char cap,
+  canonicalised lower-case), `ITenantContext` Application port, and
+  two implementations: `StaticTenantContext` for tests/jobs and
+  `AmbientTenantContext` for AsyncLocal scoping.
+- Testcontainers-based integration tests cover round-tripping Account
+  and Hold streams through Marten on real Postgres 16, plus a
+  cross-tenant isolation test asserting that conjoined tenancy hides
+  one tenant's stream from another.
+
+### Documentation
+
+- ADR-0005: conjoined tenancy over schema-per-tenant.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
