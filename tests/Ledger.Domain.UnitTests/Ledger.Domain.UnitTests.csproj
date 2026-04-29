@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Ledger.Domain.UnitTests</RootNamespace>
+    <AssemblyName>Ledger.Domain.UnitTests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ledger.Domain\Ledger.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

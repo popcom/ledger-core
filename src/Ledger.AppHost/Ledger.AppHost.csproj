@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Ledger.AppHost</RootNamespace>
+    <AssemblyName>Ledger.AppHost</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>ledger-core-apphost</UserSecretsId>
+  </PropertyGroup>
+
+  <!--
+    Aspire wiring (PackageReferences and IsAspireHost) is added in PR #18
+    along with the docker-compose stack. This project is a placeholder so
+    the solution layout matches the brief from day one.
+  -->
+
+</Project>
