@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ArchUnitNET.xUnit" />
+    <PackageReference Include="TngTech.ArchUnitNET.xUnit" />
   </ItemGroup>
 
   <ItemGroup>
