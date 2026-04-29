@@ -1,0 +1,71 @@
+name: Security scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Mondays 06:00 UTC — catch CVEs published since the last PR.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  vulnerable-nuget-packages:
+    name: dotnet list package --vulnerable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore Ledger.sln
+
+      - name: Scan for vulnerable packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          report=$(dotnet list Ledger.sln package --vulnerable --include-transitive 2>&1)
+          echo "$report"
+          if echo "$report" | grep -qiE 'has the following vulnerable packages'; then
+            echo "::error::Vulnerable NuGet packages detected"
+            exit 1
+          fi
+
+  trivy-filesystem:
+    name: Trivy filesystem scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy

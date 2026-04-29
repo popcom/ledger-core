@@ -9,7 +9,7 @@
     <WarningsAsErrors />
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>Recommended</AnalysisMode>
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

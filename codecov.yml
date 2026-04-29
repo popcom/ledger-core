@@ -1,0 +1,60 @@
+# Codecov configuration. Coverage thresholds intentionally start lenient so
+# this PR (which adds CI but no production code) does not gate every future
+# PR on a number that has not been earned yet. Domain and Application targets
+# tighten as code lands; the brief sets the bar at 80% for those layers and
+# 60% for Infrastructure.
+
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  precision: 1
+  round: down
+  range: "60...90"
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: false
+      domain:
+        paths:
+          - src/Ledger.Domain/**
+        target: 80%
+        threshold: 1%
+        # Until Milestone 1 lands, the Domain project is empty so coverage
+        # reporting is not yet informative. Mark informational for now and
+        # flip to enforcing in PR #6 (property-based invariants) when there
+        # is real code to measure.
+        informational: true
+      application:
+        paths:
+          - src/Ledger.Application/**
+        target: 80%
+        threshold: 1%
+        informational: true
+      infrastructure:
+        paths:
+          - src/Ledger.Infrastructure/**
+        target: 60%
+        threshold: 2%
+        informational: true
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+
+comment:
+  layout: "header, diff, files, footer"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "tests/**"
+  - "loadtests/**"
+  - "samples/**"
+  - "infra/**"
+  - "docs/**"
+  - "src/Ledger.AppHost/**"
+  - "**/*Marker*.cs"
+  - "**/Program.cs"
