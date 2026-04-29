@@ -83,4 +83,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   command. 200 cases per property where the input space is wide,
   50 where it is narrow.
 
+### Domain (continued)
+
+- `Hold` aggregate: temporary reservation against an account's
+  available balance with `Active → Captured | Released | Expired`
+  lifecycle. Place rejects past expiry and non-positive amounts;
+  Capture rejects expired holds; Release/Expire move the hold into
+  terminal state; the three terminal states are mutually exclusive
+  and reject further transitions. Time injected via
+  `TimeProvider`/`FakeTimeProvider` so expiry behaviour is
+  deterministically testable without sleeps.
+- `HoldId` strongly-typed identifier, `HoldStatus` enum, the four
+  hold events (`HoldPlaced`, `HoldCaptured`, `HoldReleased`,
+  `HoldExpired`), and the `HoldException` family.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
