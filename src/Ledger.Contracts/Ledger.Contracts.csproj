@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Ledger.Contracts</RootNamespace>
+    <AssemblyName>Ledger.Contracts</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <Description>Public DTOs and integration events for the Ledger module.</Description>
+  </PropertyGroup>
+
+</Project>

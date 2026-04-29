@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Ledger.Infrastructure</RootNamespace>
+    <AssemblyName>Ledger.Infrastructure</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ledger.Application\Ledger.Application.csproj" />
+  </ItemGroup>
+
+</Project>

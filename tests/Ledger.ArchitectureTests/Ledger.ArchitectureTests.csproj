@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Ledger.ArchitectureTests</RootNamespace>
+    <AssemblyName>Ledger.ArchitectureTests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ArchUnitNET.xUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ledger.Domain\Ledger.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Ledger.Application\Ledger.Application.csproj" />
+    <ProjectReference Include="..\..\src\Ledger.Infrastructure\Ledger.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Ledger.Api\Ledger.Api.csproj" />
+    <ProjectReference Include="..\..\src\Ledger.Contracts\Ledger.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
