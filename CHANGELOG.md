@@ -14,5 +14,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   AppHost), test project layout (unit, integration, architecture, property),
   central package management, shared build properties, `.editorconfig`,
   `.gitignore`, `.gitattributes`, MIT license, and README skeleton.
+- Continuous integration pipeline (`.github/workflows/ci.yml`): restore,
+  format check (`dotnet format --verify-no-changes`), Release build, test
+  with OpenCover coverage collection, test/coverage artifact upload, and
+  Codecov upload. NuGet cache keyed on `Directory.Packages.props`, project
+  files, and `global.json` keeps subsequent runs fast.
+- Security scan workflow (`.github/workflows/security-scan.yml`): runs
+  `dotnet list package --vulnerable --include-transitive` and a Trivy
+  filesystem scan (CRITICAL/HIGH, ignore-unfixed) on every push, every PR,
+  and a weekly schedule, uploading SARIF to GitHub code scanning.
+- `codecov.yml` with per-layer coverage targets (Domain/Application 80%,
+  Infrastructure 60%); thresholds are informational until Milestone 1
+  lands real code to measure.
+
+### Changed
+
+- `Directory.Build.props`: dialled `AnalysisMode` from `AllEnabledByDefault`
+  to `Recommended`. The brief mandates `TreatWarningsAsErrors` and nullable;
+  the most aggressive analyzer mode pulls in CA rules that fight empty
+  scaffolding without buying real safety yet. Re-evaluate as code lands.
+- `Ledger.Api/Program.cs`: extracted the `WebApplicationFactory` marker
+  partial class into `PublicApiMarker.cs`. The previous block-scoped
+  namespace inside `Program.cs` conflicted with the file-scoped namespace
+  rule that `dotnet format --verify-no-changes` now enforces.
 
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
