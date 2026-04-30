@@ -215,4 +215,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Completed or 200 with status + reason on a non-terminal/failed
   outcome.
 
+### Outbox
+
+- `IOutbox` Application port + `MartenOutbox` infrastructure
+  implementation. Handlers/sagas enqueue `LedgerIntegrationEvent`s
+  in the same Marten transaction as the domain writes; either both
+  commit or neither does.
+- `OutboxMessage` Marten document carries (Id, EventType, Payload,
+  TenantId, EnqueuedAt, PublishedAt, Attempts, LastError). Tenant
+  scoping via Marten conjoined tenancy.
+- `OutboxPublisher` hosted background service polls every 2s,
+  drains up to 50 unpublished rows ordered by `EnqueuedAt`, hands
+  each to the transport, marks the row published. Failures bump
+  attempts and store `LastError`; the loop continues.
+- `IOutboxTransport` with `LoggingOutboxTransport` default so the
+  outbox runs in CI without RabbitMQ. The MassTransit transport
+  lands alongside docker-compose in PR #18.
+- `Ledger.Contracts.IntegrationEvents`:
+  `AccountOpenedIntegrationEvent`, `TransferCompletedIntegrationEvent`,
+  `TransferFailedIntegrationEvent` — public, contract-stable shapes.
+- `InitiateTransferSaga` enqueues `TransferCompletedIntegrationEvent`
+  on the happy path.
+- ADR-0004 records the choice of a custom outbox table over Marten's
+  async daemon.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
