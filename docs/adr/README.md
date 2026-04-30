@@ -15,7 +15,4 @@ silently editing the original.
 | [0004](0004-outbox-pattern.md)          | Custom outbox table over async daemon       | Accepted |
 | [0005](0005-multi-tenancy.md)           | Conjoined tenancy over schema-per-tenant    | Accepted |
 | [0006](0006-mediatr-over-wolverine.md)  | MediatR for in-process dispatch             | Accepted |
-
-ADRs to be written as the relevant code lands:
-
-- ADR-007 crypto-shredding posture (PR #21).
+| [0007](0007-crypto-shredding.md)        | Per-subject AES-GCM-256 crypto-shredding    | Accepted |

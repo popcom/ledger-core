@@ -5,12 +5,14 @@ using Ledger.Application.Idempotency;
 using Ledger.Application.Outbox;
 using Ledger.Application.Persistence;
 using Ledger.Application.Queries;
+using Ledger.Application.Security;
 using Ledger.Domain.Aggregates;
 using Ledger.Infrastructure.Admin;
 using Ledger.Infrastructure.Idempotency;
 using Ledger.Infrastructure.Outbox;
 using Ledger.Infrastructure.Persistence;
 using Ledger.Infrastructure.Projections;
+using Ledger.Infrastructure.Security;
 using Marten;
 using Marten.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,6 +59,9 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IChaosToggles, InMemoryChaosToggles>();
         services.AddScoped<IProjectionAdmin, MartenProjectionAdmin>();
+
+        services.AddScoped<ISubjectKeyStore, MartenSubjectKeyStore>();
+        services.AddScoped<IPiiCrypto, AesGcmPiiCrypto>();
 
         return services;
     }
