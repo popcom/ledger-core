@@ -31,9 +31,14 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
-        // Pipeline order: validation first (cheap, deterministic),
-        // idempotency second (database round-trip, but skips the
-        // handler on a hit).
+        // Pipeline order: telemetry first so it sees every command
+        // including idempotent replays, validation second (cheap and
+        // deterministic), idempotency last (the handler-skipping
+        // database round-trip).
+        services.AddTransient(
+            typeof(IPipelineBehavior<,>),
+            typeof(Observability.TelemetryPipelineBehavior<,>));
+
         services.AddTransient(
             typeof(IPipelineBehavior<,>),
             typeof(ValidationPipelineBehavior<,>));
