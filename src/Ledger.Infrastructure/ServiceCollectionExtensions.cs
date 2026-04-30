@@ -1,9 +1,12 @@
 using JasperFx;
+using JasperFx.Events.Projections;
 using Ledger.Application.Idempotency;
 using Ledger.Application.Persistence;
+using Ledger.Application.Queries;
 using Ledger.Domain.Aggregates;
 using Ledger.Infrastructure.Idempotency;
 using Ledger.Infrastructure.Persistence;
+using Ledger.Infrastructure.Projections;
 using Marten;
 using Marten.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +44,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IAggregateRepository, MartenAggregateRepository>();
         services.AddScoped<IIdempotencyStore, MartenIdempotencyStore>();
+        services.AddScoped<IAccountBalanceQuery, MartenAccountBalanceQuery>();
 
         return services;
     }
@@ -72,6 +76,7 @@ public static class ServiceCollectionExtensions
             : AutoCreate.None;
 
         RegisterEventTypes(storeOptions);
+        storeOptions.Projections.Add<AccountBalanceProjection>(ProjectionLifecycle.Inline);
 
         return storeOptions;
     }

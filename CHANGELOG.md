@@ -147,4 +147,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   validation behavior, idempotency behavior (in that order), every
   `IValidator<>` from the assembly, and `TimeProvider.System`.
 
+### Read side
+
+- `account_balances` Marten projection. Single-stream, inline
+  lifecycle: balance, status, and timestamps fold from
+  `AccountOpened` / `Credited` / `Debited` / `Frozen` / `Unfrozen` /
+  `Closed` events within the same transaction so a command handler
+  reads its own writes inside one request.
+- `IAccountBalanceQuery` Application port and `MartenAccountBalanceQuery`
+  implementation. Tenant-scoped via Marten conjoined sessions; returns
+  `AccountBalanceView` records to keep the document type private to
+  Infrastructure.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
