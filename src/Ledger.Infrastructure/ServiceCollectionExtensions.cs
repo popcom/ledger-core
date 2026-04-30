@@ -1,10 +1,12 @@
 using JasperFx;
 using JasperFx.Events.Projections;
+using Ledger.Application.Admin;
 using Ledger.Application.Idempotency;
 using Ledger.Application.Outbox;
 using Ledger.Application.Persistence;
 using Ledger.Application.Queries;
 using Ledger.Domain.Aggregates;
+using Ledger.Infrastructure.Admin;
 using Ledger.Infrastructure.Idempotency;
 using Ledger.Infrastructure.Outbox;
 using Ledger.Infrastructure.Persistence;
@@ -52,6 +54,9 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IOutboxTransport, LoggingOutboxTransport>();
         services.AddHostedService<OutboxPublisher>();
+
+        services.TryAddSingleton<IChaosToggles, InMemoryChaosToggles>();
+        services.AddScoped<IProjectionAdmin, MartenProjectionAdmin>();
 
         return services;
     }
