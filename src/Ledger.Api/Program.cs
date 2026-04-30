@@ -1,6 +1,7 @@
 using FluentValidation;
 
 using Ledger.Api.Endpoints;
+using Ledger.Api.Observability;
 using Ledger.Api.Tenancy;
 using Ledger.Application;
 using Ledger.Application.Tenancy;
@@ -10,6 +11,8 @@ using Ledger.Domain.Aggregates;
 using Ledger.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddLedgerObservability();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
