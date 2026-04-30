@@ -20,6 +20,7 @@ internal static class AccountEndpoints
         group.MapPost("/", OpenAccount).WithName("OpenAccount");
         group.MapGet("/", ListAccounts).WithName("ListAccounts");
         group.MapGet("/{accountId:guid}", GetAccount).WithName("GetAccount");
+        group.MapGet("/{accountId:guid}/balance", GetBalanceAsOf).WithName("GetBalanceAsOf");
         group.MapPost("/{accountId:guid}/freeze", FreezeAccount).WithName("FreezeAccount");
         group.MapPost("/{accountId:guid}/unfreeze", UnfreezeAccount).WithName("UnfreezeAccount");
         group.MapPost("/{accountId:guid}/close", CloseAccount).WithName("CloseAccount");
@@ -60,6 +61,30 @@ internal static class AccountEndpoints
         return view is null
             ? Results.NotFound(new { error = "account.not_found", accountId })
             : Results.Ok(view);
+    }
+
+    private static async Task<IResult> GetBalanceAsOf(
+        Guid accountId,
+        DateTimeOffset? asOf,
+        IAccountBalanceQuery balance,
+        IAccountTimelineQuery timeline,
+        CancellationToken cancellationToken)
+    {
+        var id = new AccountId(accountId);
+
+        if (!asOf.HasValue)
+        {
+            var view = await balance.GetAsync(id, cancellationToken).ConfigureAwait(false);
+            return view is null
+                ? Results.NotFound(new { error = "account.not_found", accountId })
+                : Results.Ok(view);
+        }
+
+        var asOfView = await timeline.GetAsOfAsync(id, asOf.Value, cancellationToken)
+            .ConfigureAwait(false);
+        return asOfView is null
+            ? Results.NotFound(new { error = "account.not_found_at_time", accountId, asOf = asOf.Value })
+            : Results.Ok(asOfView);
     }
 
     private static async Task<IResult> ListAccounts(
