@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Marten.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ledger.Application\Ledger.Application.csproj" />
     <ProjectReference Include="..\Ledger.Infrastructure\Ledger.Infrastructure.csproj" />
     <ProjectReference Include="..\Ledger.Contracts\Ledger.Contracts.csproj" />
