@@ -1,4 +1,6 @@
+using Ledger.Application.Outbox;
 using Ledger.Application.Persistence;
+using Ledger.Contracts.IntegrationEvents;
 using Ledger.Domain;
 using Ledger.Domain.Aggregates;
 
@@ -17,10 +19,12 @@ public sealed class InitiateTransferSaga
     : IRequestHandler<InitiateTransferCommand, InitiateTransferResult>
 {
     private readonly IAggregateRepository _repository;
+    private readonly IOutbox _outbox;
 
-    public InitiateTransferSaga(IAggregateRepository repository)
+    public InitiateTransferSaga(IAggregateRepository repository, IOutbox outbox)
     {
         _repository = repository;
+        _outbox = outbox;
     }
 
     public async Task<InitiateTransferResult> Handle(
@@ -71,6 +75,18 @@ public sealed class InitiateTransferSaga
 
         transfer.ConfirmCredit();
         await _repository.SaveTransferAsync(transfer, cancellationToken).ConfigureAwait(false);
+
+        await _outbox.EnqueueAsync(
+            new TransferCompletedIntegrationEvent
+            {
+                TransferId = transferId.Value,
+                SourceAccountId = request.SourceAccountId.Value,
+                DestinationAccountId = request.DestinationAccountId.Value,
+                Amount = request.Amount.Amount,
+                Currency = request.Amount.Currency.Code,
+                Reference = request.Reference,
+            },
+            cancellationToken).ConfigureAwait(false);
 
         return Result(transferId, transfer);
     }

@@ -1,4 +1,5 @@
 using Ledger.Application.Commands.InitiateTransfer;
+using Ledger.Application.Outbox;
 using Ledger.Application.Persistence;
 using Ledger.Domain.Aggregates;
 using Ledger.Domain.ValueObjects;
@@ -31,7 +32,7 @@ public sealed class InitiateTransferSagaTests
         repo.LoadAccountAsync(source.Id, Arg.Any<CancellationToken>()).Returns(source);
         repo.LoadAccountAsync(destination.Id, Arg.Any<CancellationToken>()).Returns(destination);
 
-        var saga = new InitiateTransferSaga(repo);
+        var saga = new InitiateTransferSaga(repo, Substitute.For<IOutbox>());
         var command = new InitiateTransferCommand(
             source.Id, destination.Id, Twenty, "salary",
             IdempotencyKey.Parse("transfer-1"));
@@ -58,7 +59,7 @@ public sealed class InitiateTransferSagaTests
         repo.LoadAccountAsync(source.Id, Arg.Any<CancellationToken>()).Returns(source);
         repo.LoadAccountAsync(destination.Id, Arg.Any<CancellationToken>()).Returns(destination);
 
-        var saga = new InitiateTransferSaga(repo);
+        var saga = new InitiateTransferSaga(repo, Substitute.For<IOutbox>());
         var command = new InitiateTransferCommand(
             source.Id, destination.Id, Twenty, "rent",
             IdempotencyKey.Parse("transfer-2"));
@@ -83,7 +84,7 @@ public sealed class InitiateTransferSagaTests
         repo.LoadAccountAsync(source.Id, Arg.Any<CancellationToken>()).Returns(source);
         repo.LoadAccountAsync(destination.Id, Arg.Any<CancellationToken>()).Returns(destination);
 
-        var saga = new InitiateTransferSaga(repo);
+        var saga = new InitiateTransferSaga(repo, Substitute.For<IOutbox>());
         var command = new InitiateTransferCommand(
             source.Id, destination.Id, Twenty, "rent",
             IdempotencyKey.Parse("transfer-3"));
