@@ -94,5 +94,13 @@ public static class ServiceCollectionExtensions
         options.Events.AddEventType<HoldCaptured>();
         options.Events.AddEventType<HoldReleased>();
         options.Events.AddEventType<HoldExpired>();
+
+        options.Events.AddEventType<TransferInitiated>();
+        options.Events.AddEventType<TransferDebitConfirmed>();
+        options.Events.AddEventType<TransferCreditConfirmed>();
+        options.Events.AddEventType<TransferCompleted>();
+        options.Events.AddEventType<TransferCompensationStarted>();
+        options.Events.AddEventType<TransferCompensationCompleted>();
+        options.Events.AddEventType<TransferFailed>();
     }
 }

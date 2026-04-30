@@ -91,5 +91,6 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.MapAccountEndpoints();
+app.MapTransferEndpoints();
 
 await app.RunAsync().ConfigureAwait(false);
