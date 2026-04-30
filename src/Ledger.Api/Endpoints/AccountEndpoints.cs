@@ -21,6 +21,7 @@ internal static class AccountEndpoints
         group.MapGet("/", ListAccounts).WithName("ListAccounts");
         group.MapGet("/{accountId:guid}", GetAccount).WithName("GetAccount");
         group.MapGet("/{accountId:guid}/balance", GetBalanceAsOf).WithName("GetBalanceAsOf");
+        group.MapGet("/{accountId:guid}/statement", GetDailyStatement).WithName("GetDailyStatement");
         group.MapPost("/{accountId:guid}/freeze", FreezeAccount).WithName("FreezeAccount");
         group.MapPost("/{accountId:guid}/unfreeze", UnfreezeAccount).WithName("UnfreezeAccount");
         group.MapPost("/{accountId:guid}/close", CloseAccount).WithName("CloseAccount");
@@ -61,6 +62,18 @@ internal static class AccountEndpoints
         return view is null
             ? Results.NotFound(new { error = "account.not_found", accountId })
             : Results.Ok(view);
+    }
+
+    private static async Task<IResult> GetDailyStatement(
+        Guid accountId,
+        DateOnly fromDate,
+        DateOnly toDate,
+        IDailyStatementQuery query,
+        CancellationToken cancellationToken)
+    {
+        var entries = await query.ForAccountAsync(accountId, fromDate, toDate, cancellationToken)
+            .ConfigureAwait(false);
+        return Results.Ok(entries);
     }
 
     private static async Task<IResult> GetBalanceAsOf(
