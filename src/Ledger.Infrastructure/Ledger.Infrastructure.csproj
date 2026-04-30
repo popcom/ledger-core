@@ -4,10 +4,11 @@
     <RootNamespace>Ledger.Infrastructure</RootNamespace>
     <AssemblyName>Ledger.Infrastructure</AssemblyName>
     <IsPackable>false</IsPackable>
-    <!-- CA1848 prefers LoggerMessage source-gen delegates. The perf
-         improvement is real but the readability cost is high for a
-         service of this size; revisit once a profiler flags it. -->
-    <NoWarn>$(NoWarn);CA1848</NoWarn>
+    <!-- CA1848 / CA1873 prefer LoggerMessage source-gen delegates and
+         is-enabled checks. The perf improvements are real but the
+         readability cost is high for a service of this size; revisit
+         once a profiler flags it. -->
+    <NoWarn>$(NoWarn);CA1848;CA1873</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
