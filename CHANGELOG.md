@@ -181,4 +181,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   400, `CommandValidationException` → 400) to RFC-7807-shaped JSON.
   Replaced by the full problem-details middleware in PR #17.
 
+### Domain (transfer)
+
+- `Transfer` aggregate state machine: `Initiated → AwaitingDebit →
+  AwaitingCredit → Completed` on the happy path; `Compensating →
+  Failed` on any step failure. `Initiate`, `ConfirmDebit`,
+  `ConfirmCredit`, `Fail`, `CompleteCompensation` are the public
+  command surface. Same-account transfers and non-positive amounts
+  throw at construction.
+- `TransferId`, `TransferStatus` (six states), seven `TransferEvent`
+  records (`Initiated`, `DebitConfirmed`, `CreditConfirmed`,
+  `Completed`, `CompensationStarted`, `CompensationCompleted`,
+  `Failed`), and three typed `TransferException`s
+  (`not_initiated`, `invalid_state`, `same_account`).
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
