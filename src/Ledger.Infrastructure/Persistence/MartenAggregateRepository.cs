@@ -109,6 +109,49 @@ public sealed class MartenAggregateRepository : IAggregateRepository
         hold.ClearPendingEvents();
     }
 
+    public async Task<Transfer?> LoadTransferAsync(
+        TransferId id,
+        CancellationToken cancellationToken = default)
+    {
+        await using var session = OpenSession();
+        var events = await session.Events.FetchStreamAsync(
+            id.Value, token: cancellationToken).ConfigureAwait(false);
+
+        if (events.Count == 0)
+        {
+            return null;
+        }
+
+        return Transfer.Rehydrate(events.Select(e => (TransferEvent)e.Data));
+    }
+
+    public async Task SaveTransferAsync(
+        Transfer transfer,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(transfer);
+        if (transfer.PendingEvents.Count == 0)
+        {
+            return;
+        }
+
+        await using var session = OpenSession();
+        var events = transfer.PendingEvents.Cast<object>().ToArray();
+
+        if (transfer.Version == transfer.PendingEvents.Count)
+        {
+            session.Events.StartStream<Transfer>(transfer.Id.Value, events);
+        }
+        else
+        {
+            await session.Events.AppendOptimistic(
+                transfer.Id.Value, events).ConfigureAwait(false);
+        }
+
+        await session.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        transfer.ClearPendingEvents();
+    }
+
     private IDocumentSession OpenSession() =>
         _store.LightweightSession(
             _tenantContext.Current.Value,

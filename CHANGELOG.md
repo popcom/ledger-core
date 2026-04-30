@@ -195,4 +195,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Failed`), and three typed `TransferException`s
   (`not_initiated`, `invalid_state`, `same_account`).
 
+### Application (transfer saga)
+
+- `InitiateTransferCommand` + `InitiateTransferSaga` process manager:
+  loads the source account and debits, confirms the debit on the
+  Transfer, loads the destination and credits, confirms the credit.
+  On any `DomainException` mid-saga the Transfer is moved to
+  `Failed` (debit phase) or through `Compensating → Failed` with a
+  refund credit on the source (credit phase). The saga itself is a
+  plain `IRequestHandler` so the validation and idempotency
+  pipelines wrap it for free.
+- `IAggregateRepository` extended with `LoadTransferAsync` and
+  `SaveTransferAsync`; `MartenAggregateRepository` mirrors the
+  Account/Hold pattern (`StartStream` for first event,
+  `AppendOptimistic` for subsequent ones). Marten event
+  registration covers the seven transfer events.
+- `POST /v1/transfers` API endpoint: validates the body, parses the
+  `Idempotency-Key` header, sends the command, and returns 201 on
+  Completed or 200 with status + reason on a non-terminal/failed
+  outcome.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main

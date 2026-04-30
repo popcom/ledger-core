@@ -17,4 +17,8 @@ public interface IAggregateRepository
     public Task<Hold?> LoadHoldAsync(HoldId id, CancellationToken cancellationToken = default);
 
     public Task SaveHoldAsync(Hold hold, CancellationToken cancellationToken = default);
+
+    public Task<Transfer?> LoadTransferAsync(TransferId id, CancellationToken cancellationToken = default);
+
+    public Task SaveTransferAsync(Transfer transfer, CancellationToken cancellationToken = default);
 }
