@@ -121,5 +121,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - ADR-0005: conjoined tenancy over schema-per-tenant.
+- ADR-0006: MediatR over Wolverine for in-process dispatch.
+
+### Application
+
+- `OpenAccountCommand` and its handler. Accepts `(Owner, Currency,
+  IdempotencyKey)`, opens a fresh `Account` aggregate, persists via
+  `IAggregateRepository`, and returns the new id, owner, currency,
+  and a UTC-stamped `OpenedAt`.
+- `IIdempotentRequest<TResponse>` marker plus
+  `IdempotencyPipelineBehavior`: replays of a `(tenant, key)` return
+  the cached response verbatim without re-running the handler. Hits
+  the persistent `IIdempotencyStore` port; misses run the pipeline
+  and write the response back with a 24h retention window.
+- `ValidationPipelineBehavior` runs every registered FluentValidation
+  validator and short-circuits with `CommandValidationException`
+  before reaching the idempotency store, keeping cheap rejects out
+  of the cache.
+- `IdempotencyKey` Domain value object (alphanumeric +
+  `-`/`_`/`:`/`.`, 128-char cap).
+- `MartenIdempotencyStore` implements the Application port against
+  a Marten document table; sessions are tenant-scoped via
+  `LightweightSession(tenantId, ReadCommitted)`.
+- `AddLedgerApplication` composition root: MediatR assembly scan,
+  validation behavior, idempotency behavior (in that order), every
+  `IValidator<>` from the assembly, and `TimeProvider.System`.
 
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main

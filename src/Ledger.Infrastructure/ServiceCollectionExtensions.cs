@@ -1,6 +1,8 @@
 using JasperFx;
+using Ledger.Application.Idempotency;
 using Ledger.Application.Persistence;
 using Ledger.Domain.Aggregates;
+using Ledger.Infrastructure.Idempotency;
 using Ledger.Infrastructure.Persistence;
 using Marten;
 using Marten.Storage;
@@ -38,6 +40,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IAggregateRepository, MartenAggregateRepository>();
+        services.AddScoped<IIdempotencyStore, MartenIdempotencyStore>();
 
         return services;
     }

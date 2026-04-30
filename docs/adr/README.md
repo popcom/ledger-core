@@ -13,9 +13,9 @@ silently editing the original.
 | [0002](0002-event-sourcing.md)          | Event sourcing for the Ledger write side    | Accepted |
 | [0003](0003-marten-over-eventstoredb.md)| Marten over EventStoreDB as the event store | Accepted |
 | [0005](0005-multi-tenancy.md)           | Conjoined tenancy over schema-per-tenant    | Accepted |
+| [0006](0006-mediatr-over-wolverine.md)  | MediatR for in-process dispatch             | Accepted |
 
 ADRs to be written as the relevant code lands:
 
 - ADR-004 outbox: Marten async daemon vs custom outbox table (PR #14).
-- ADR-006 in-process dispatch: MediatR vs Wolverine (PR #9).
 - ADR-007 crypto-shredding posture (PR #21).
