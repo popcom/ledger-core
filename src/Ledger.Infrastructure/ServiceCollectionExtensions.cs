@@ -53,6 +53,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IIdempotencyStore, MartenIdempotencyStore>();
         services.AddScoped<IAccountBalanceQuery, MartenAccountBalanceQuery>();
         services.AddScoped<IAccountTimelineQuery, MartenAccountTimelineQuery>();
+        services.AddScoped<IDailyStatementQuery, MartenDailyStatementQuery>();
         services.AddScoped<IOutbox, MartenOutbox>();
 
         services.TryAddSingleton<IOutboxTransport, LoggingOutboxTransport>();
