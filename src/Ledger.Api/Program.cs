@@ -34,5 +34,6 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.MapAccountEndpoints();
 app.MapTransferEndpoints();
+app.MapAdminEndpoints();
 
 await app.RunAsync().ConfigureAwait(false);

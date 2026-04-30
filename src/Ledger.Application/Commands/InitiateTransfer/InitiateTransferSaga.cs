@@ -1,3 +1,4 @@
+using Ledger.Application.Admin;
 using Ledger.Application.Outbox;
 using Ledger.Application.Persistence;
 using Ledger.Contracts.IntegrationEvents;
@@ -20,11 +21,24 @@ public sealed class InitiateTransferSaga
 {
     private readonly IAggregateRepository _repository;
     private readonly IOutbox _outbox;
+    private readonly IChaosToggles _chaos;
 
-    public InitiateTransferSaga(IAggregateRepository repository, IOutbox outbox)
+    public InitiateTransferSaga(
+        IAggregateRepository repository,
+        IOutbox outbox,
+        IChaosToggles? chaos = null)
     {
         _repository = repository;
         _outbox = outbox;
+        _chaos = chaos ?? NoChaos.Instance;
+    }
+
+    private sealed class NoChaos : IChaosToggles
+    {
+        public static readonly NoChaos Instance = new();
+        public bool FailEveryTransferAtCredit => false;
+        public void Toggle(string name, bool enabled) { }
+        public IReadOnlyDictionary<string, bool> Snapshot() => new Dictionary<string, bool>();
     }
 
     public async Task<InitiateTransferResult> Handle(
@@ -59,6 +73,11 @@ public sealed class InitiateTransferSaga
 
         try
         {
+            if (_chaos.FailEveryTransferAtCredit)
+            {
+                throw new ChaosInducedFailureException(
+                    "Chaos toggle 'fail_every_transfer_at_credit' is on; aborting credit phase.");
+            }
             await CreditDestinationAsync(request, cancellationToken).ConfigureAwait(false);
         }
         catch (DomainException ex)
