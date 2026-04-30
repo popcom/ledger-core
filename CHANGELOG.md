@@ -159,4 +159,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `AccountBalanceView` records to keep the document type private to
   Infrastructure.
 
+### API
+
+- Minimal-API endpoints for account commands and queries:
+  `POST /v1/accounts`, `GET /v1/accounts`, `GET /v1/accounts/{id}`,
+  `POST /v1/accounts/{id}/freeze`, `POST /v1/accounts/{id}/unfreeze`,
+  `POST /v1/accounts/{id}/close`. Commands flow through MediatR via
+  `IIdempotentRequest<TResponse>` with the `Idempotency-Key` header
+  bound through `[AsParameters]`/`[FromHeader]`.
+- `HttpTenantContext` resolves `X-Tenant-Id` from the request and is
+  registered scoped; missing or malformed headers throw
+  `MissingTenantHeaderException`, mapped to a 400 by the global
+  exception handler.
+- `FreezeAccountCommand`, `UnfreezeAccountCommand`, `CloseAccountCommand`
+  + handlers added to the Application layer. All three load via
+  `IAggregateRepository`, mutate, save, return `Unit`. Failed loads
+  surface as `AccountNotOpenException` (404) at the API edge.
+- Stop-gap global exception handler maps the domain exception family
+  (`AccountNotOpenException` → 404, other `DomainException`s → 409,
+  `MissingTenantHeaderException`/`MissingIdempotencyKeyException` →
+  400, `CommandValidationException` → 400) to RFC-7807-shaped JSON.
+  Replaced by the full problem-details middleware in PR #17.
+
 [Unreleased]: https://github.com/popcom/ledger-core/commits/main
