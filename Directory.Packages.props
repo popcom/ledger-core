@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup Label="Event store and data access">
-    <PackageVersion Include="Marten" Version="8.34.0" />
-    <PackageVersion Include="Marten.AspNetCore" Version="8.34.0" />
+    <PackageVersion Include="Marten" Version="9.0.2" />
+    <PackageVersion Include="Marten.AspNetCore" Version="9.0.2" />
     <PackageVersion Include="Npgsql" Version="9.0.4" />
   </ItemGroup>
 
