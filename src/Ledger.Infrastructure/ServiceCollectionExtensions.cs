@@ -1,5 +1,6 @@
 using JasperFx;
 using JasperFx.Events.Projections;
+using JasperFx.MultiTenancy;
 using Ledger.Application.Admin;
 using Ledger.Application.Idempotency;
 using Ledger.Application.Outbox;
@@ -14,7 +15,6 @@ using Ledger.Infrastructure.Persistence;
 using Ledger.Infrastructure.Projections;
 using Ledger.Infrastructure.Security;
 using Marten;
-using Marten.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
